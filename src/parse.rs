@@ -5,12 +5,12 @@
 //
 
 use super::err::JsonParseError;
-use super::token_reader::{TokenType, Tokenizer};
+use super::token::{TokenType, Tokenizer};
 use std::collections::{HashMap, VecDeque};
 use std::mem::replace;
 
 #[derive(Debug)]
-enum Value {
+pub enum Value {
     NULL,
     BOOLEAN(bool),
     NUMBER(i64),
@@ -19,9 +19,9 @@ enum Value {
     OBJECT(HashMap<String, Value>),
 }
 
-type ParseJsonResult = Result<Value, JsonParseError>;
+pub type ParseJsonResult = Result<Value, JsonParseError>;
 
-struct JsonParse {}
+pub struct JsonParse {}
 
 impl JsonParse {
     pub fn parse(json: &str) -> ParseJsonResult {
@@ -248,77 +248,3 @@ impl Value {
     }
 }
 
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn null_parse() {
-        let json = "null";
-        let result = JsonParse::parse(json).unwrap();
-        assert!(result.is_null())
-    }
-
-    #[test]
-    fn number_parse() {
-        let json = "-1234";
-        let result = JsonParse::parse(json).unwrap();
-        assert!(result.is_number())
-    }
-
-    #[test]
-    fn string_parse() {
-        let json = "\"-1234\"";
-        let result = JsonParse::parse(json).unwrap();
-        assert!(result.is_string())
-    }
-
-    #[test]
-    fn boolean_parse() {
-        let json = "true";
-        let result = JsonParse::parse(json).unwrap();
-        assert!(result.is_boolean())
-    }
-
-    #[test]
-    fn simple_array_parse() {
-        let json = "[]";
-        let result = JsonParse::parse(json).unwrap();
-        assert!(result.is_array())
-    }
-
-    #[test]
-    fn simple_array_parse1() {
-        let json = "[111,234]";
-        let result = JsonParse::parse(json).unwrap();
-        assert!(result.is_array())
-    }
-
-    #[test]
-    fn simple_array_parse2() {
-        let json = "[111,234,{}]";
-        let result = JsonParse::parse(json).unwrap();
-        assert!(result.is_array())
-    }
-
-    #[test]
-    fn simple_object_parse() {
-        let json = "{}";
-        let result = JsonParse::parse(json).unwrap();
-        assert!(result.is_object())
-    }
-
-    #[test]
-    fn simple_object_parse1() {
-        let json = "{\"hh\":123}";
-        let result = JsonParse::parse(json).unwrap();
-        assert!(result.is_object())
-    }
-
-    #[test]
-    fn simple_object_parse2() {
-        let json = "{\"hh\":123,\"123\":[{\"456\":null},{\"789\":true},{}]}";
-        let result = JsonParse::parse(json).unwrap();
-        assert!(result.is_object())
-    }
-}
