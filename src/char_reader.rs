@@ -23,11 +23,11 @@ impl<'t> CharReader<'t> {
         return next;
     }
 
-    fn pop(&mut self) {
+    pub fn pop(&mut self) {
         self.peek = self.chars.next();
     }
 
-    fn peek(&self) -> Option<char> {
+    pub fn peek(&self) -> Option<char> {
         self.peek
     }
 
@@ -40,5 +40,3 @@ impl<'t> CharReader<'t> {
         }
     }
 }
-
-
